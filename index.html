@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
+    <style>
     {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -52,26 +53,20 @@
         color: red;
     }
 </style>
-</head>
-<body>
+
 <div class="container">
     <h1>Consulta CEP</h1>
     <form method="POST">
-        <input type="text" name="cep" placeholder="Digite o CEP" maxlength="8" required>
-        <button type="submit">Buscar</button>
-    </form>
-
-    {% if error %}
-        <div class="error">{{ error }}</div>
-    {% elif cep %}
         <div class="result">
-            <p><strong>CEP:</strong> {{ cep.cep }}</p>
-            <p><strong>Logradouro:</strong> {{ cep.logradouro }}</p>
-            <p><strong>Bairro:</strong> {{ cep.bairro }}</p>
-            <p><strong>Cidade:</strong> {{ cep.localidade }}</p>
-            <p><strong>Estado:</strong> {{ cep.uf }}</p>
+            <p><input type="text" class="form-control" id="CEP" name="CEP" placeholder="Numero do CEP"></p>
+            <p><input type="text" class="form-control" id="logradouro" name="logradouro" placeholder="Rua"></p>
+            <p><input type="text" class="form-control" id="bairro" name="bairro" placeholder="bairro"></p>
+            <p><input type="text" class="form-control" id="Cidade" name="Cidade" placeholder="Cidade"></p>
+            <p><input type="text" class="form-control" id="Estado" name="Estado" placeholder="Estado"></p>
+            <button type="submit">Buscar</button>
         </div>
-    {% endif %}
+    </form>
 </div>
 </body>
+</head>
 </html>
