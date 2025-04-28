@@ -1,4 +1,4 @@
-Buscador de endereço 
+Buscador de endereço/CEPS
 
 Este projeto consiste em um sistema desenvolvido em Python que utiliza uma API para buscar CEPs. O objetivo do sistema é fornecer uma interface simples e eficiente para buscar informações de endereços a partir de CEPs.
 
