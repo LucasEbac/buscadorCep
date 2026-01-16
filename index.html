@@ -10,24 +10,14 @@
 <body>
     <div class="container">
         <h2>Consulta de CEP</h2>
-        <form id="cepForm">
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" placeholder="Digite o CEP" maxlength="9" required>
-            
-            <button type="button" id="buscarCepBtn">Buscar CEP</button> <!-- Botão para buscar o CEP -->
+        <input id="estadoBusca" placeholder="UF (ex: SP)">
+<input id="cidadeBusca" placeholder="Cidade">
+<input id="logradouroBusca" placeholder="Logradouro">
 
-            <label for="logradouro">Endereço:</label>
-            <input type="text" id="logradouro" name="logradouro" readonly>
+<button id="buscarEnderecoBtn">Buscar Endereço</button>
 
-            <label for="bairro">Bairro:</label>
-            <input type="text" id="bairro" name="bairro" readonly>
-
-            <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" readonly>
-
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" readonly>
-        </form>
+<ul id="listaResultados"></ul>
+        
     </div>
 </body>
 </html>
