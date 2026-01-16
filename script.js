@@ -48,4 +48,5 @@ function preencherCampos(endereco) {
     document.getElementById("bairro").value = endereco.bairro;
     document.getElementById("cidade").value = endereco.localidade;
     document.getElementById("estado").value = endereco.uf;
+    document.getElementById("limparBtn").style.display = "none";
 }
