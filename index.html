@@ -3,22 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta CEP</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+    <title>Buscador de Endereços</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Consulta de CEP</h2>
-        <input id="estadoBusca" placeholder="UF (ex: SP)">
-        <input id="cidadeBusca" placeholder="Cidade" size="25">
-        <input id="logradouroBusca" placeholder="Logradouro">
-
-<button id="buscarEnderecoBtn">Buscar Endereço</button>
-<button id="limparBtn">Limpar</button>
-<ul id="listaResultados"></ul>
-        
+    <h2>Buscador de Endereço</h2>
+    
+    <div class="campo">
+        <label>UF:</label>
+        <input type="text" id="uf" placeholder="Ex: SP" maxlength="2">
     </div>
+    <div class="campo">
+        <label>Cidade:</label>
+        <input type="text" id="cidade" placeholder="Ex: São Paulo">
+    </div>
+    <div class="campo">
+        <label>Logradouro:</label>
+        <input type="text" id="logradouro" placeholder="Ex: Avenida Paulista">
+    </div>
+
+    <button id="buscarEnderecoBtn">Buscar Endereço</button>
+    <button id="btnLimpar" onclick="limparCampos()">Limpar</button>
+
+    <h3>Resultados:</h3>
+    <ul id="listaResultados"></ul>
+
+    <hr>
+    <h3>Dados Preenchidos:</h3>
+    <p>CEP: <strong id="resCep">-</strong></p>
+    <p>Rua: <strong id="resRua">-</strong></p>
+    <p>Bairro: <strong id="resBairro">-</strong></p>
+
+    <script>
+        document.getElementById("buscarEnderecoBtn").addEventListener("click", async function () {
+            const uf = document.getElementById("uf").value.trim();
+            const cidade = document.getElementById("cidade").value.trim();
+            const logradouro = document.getElementById("logradouro").value.trim();
+
+            if (!uf || !cidade || !logradouro) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const response = await fetch('/buscar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uf, cidade, logradouro })
+            });
+
+            const data = await response.json();
+            exibirResultados(data);
+        });
+
+        function exibirResultados(data) {
+            const lista = document.getElementById("listaResultados");
+            lista.innerHTML = "";
+            
+            if (data.length === 0) {
+                lista.innerHTML = "<li>Nenhum endereço encontrado.</li>";
+                return;
+            }
+
+            data.forEach(endereco => {
+                let item = document.createElement("li");
+                item.innerText = `${endereco.logradouro} - ${endereco.bairro} - ${endereco.cep}`;
+                item.onclick = () => preencherCampos(endereco);
+                lista.appendChild(item);
+            });
+
+            document.getElementById("btnLimpar").style.display = "inline-block";
+        }
+
+        function preencherCampos(end) {
+            document.getElementById("resCep").innerText = end.cep;
+            document.getElementById("resRua").innerText = end.logradouro;
+            document.getElementById("resBairro").innerText = end.bairro;
+        }
+
+        function limparCampos() {
+            document.querySelectorAll("input").forEach(i => i.value = "");
+            document.getElementById("listaResultados").innerHTML = "";
+            document.getElementById("btnLimpar").style.display = "none";
+            document.getElementById("resCep").innerText = "-";
+            document.getElementById("resRua").innerText = "-";
+            document.getElementById("resBairro").innerText = "-";
+        }
+    </script>
 </body>
 </html>
-
