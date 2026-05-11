@@ -2,7 +2,7 @@ Buscador de endereço/CEPS
 
 Este projeto consiste em um sistema desenvolvido em Python que utiliza uma API para buscar CEPs. O objetivo do sistema é fornecer uma interface simples e eficiente para buscar informações de endereços a partir de informações preenchidas pelo usuario, como logradouro, UF e cidade.
 
-Tecnologias Utilizadas
+Ferramentas Utilizadas no projeto
 - Linguagem de programação: Python
 - Biblioteca para requisições HTTP: requests
 - API de CEP: API pública 
