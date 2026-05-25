@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador de Endereços</title>
-</head>
+    
 <body>
+
     <h2>Buscador de Endereço</h2>
     
     <div class="campo">
         <label>UF:</label>
-        <input type="text" id="uf" placeholder="Ex: SP" maxlength="2">
+        <!-- Adicionado o evento oninput para validar o texto em tempo real -->
+        <input type="text" id="uf" placeholder="Ex: SP" maxlength="2" oninput="validarUF(this)">
     </div>
     <div class="campo">
         <label>Cidade:</label>
-        <input type="text" id="cidade" placeholder="Ex: São Paulo">
+        <input type="text" id="cidade" placeholder="Ex: Sao Paulo">
     </div>
     <div class="campo">
         <label>Logradouro:</label>
@@ -24,53 +26,75 @@
     <button id="buscarEnderecoBtn">Buscar Endereço</button>
     <button id="btnLimpar" onclick="limparCampos()">Limpar</button>
 
-    <h3>Resultados:</h3>
+    <h3>Resultados encontrados:</h3>
     <ul id="listaResultados"></ul>
 
     <hr>
-    <h3>Dados Preenchidos:</h3>
-    <p>CEP: <strong id="resCep">-</strong></p>
-    <p>Rua: <strong id="resRua">-</strong></p>
-    <p>Bairro: <strong id="resBairro">-</strong></p>
+
+    <div class="resultado-box">
+        <h3>Dados Preenchidos (Clique em um resultado acima):</h3>
+        <p>CEP: <strong id="resCep">-</strong></p>
+        <p>Rua: <strong id="resRua">-</strong></p>
+        <p>Bairro: <strong id="resBairro">-</strong></p>
+    </div>
 
     <script>
+        // Função que impede números e força letras maiúsculas no campo UF
+        function validarUF(input) {
+            input.value = input.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
+        }
+
         document.getElementById("buscarEnderecoBtn").addEventListener("click", async function () {
             const uf = document.getElementById("uf").value.trim();
             const cidade = document.getElementById("cidade").value.trim();
             const logradouro = document.getElementById("logradouro").value.trim();
 
             if (!uf || !cidade || !logradouro) {
-                alert("Preencha todos os campos!");
+                alert("Por favor, preencha todos os campos!");
                 return;
             }
 
-            const response = await fetch('/buscar', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uf, cidade, logradouro })
-            });
+            // Ativa o estado de carregamento no botão e na lista
+            const botao = document.getElementById("buscarEnderecoBtn");
+            const lista = document.getElementById("listaResultados");
+            
+            botao.disabled = true;
+            botao.innerText = "Carregando...";
+            lista.innerHTML = "<li class='loading'>Buscando endereços na base do ViaCEP...</li>";
 
-            const data = await response.json();
-            exibirResultados(data);
+            try {
+                const url = `https://viacep.com.br{uf}/${encodeURIComponent(cidade)}/${encodeURIComponent(logradouro)}/json/`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Erro na rede.");
+
+                const data = await response.json();
+                exibirResultados(data);
+            } catch (error) {
+                alert("Não foi possível conectar à API de CEP.");
+                lista.innerHTML = "";
+            } finally {
+                // Restaura o botão original independente de a busca dar certo ou errado
+                botao.disabled = false;
+                botao.innerText = "Buscar Endereço";
+            }
         });
 
         function exibirResultados(data) {
             const lista = document.getElementById("listaResultados");
             lista.innerHTML = "";
             
-            if (data.length === 0) {
-                lista.innerHTML = "<li>Nenhum endereço encontrado.</li>";
+            if (!data || data.length === 0 || data.erro) {
+                lista.innerHTML = "<li>Nenhum endereço encontrado. Verifique a ortografia.</li>";
                 return;
             }
 
             data.forEach(endereco => {
                 let item = document.createElement("li");
-                item.innerText = `${endereco.logradouro} - ${endereco.bairro} - ${endereco.cep}`;
+                item.innerText = `${endereco.logradouro} - ${endereco.bairro} (CEP: ${endereco.cep})`;
                 item.onclick = () => preencherCampos(endereco);
                 lista.appendChild(item);
             });
-
-            document.getElementById("btnLimpar").style.display = "inline-block";
         }
 
         function preencherCampos(end) {
@@ -82,11 +106,11 @@
         function limparCampos() {
             document.querySelectorAll("input").forEach(i => i.value = "");
             document.getElementById("listaResultados").innerHTML = "";
-            document.getElementById("btnLimpar").style.display = "none";
             document.getElementById("resCep").innerText = "-";
             document.getElementById("resRua").innerText = "-";
             document.getElementById("resBairro").innerText = "-";
         }
     </script>
+
 </body>
 </html>
