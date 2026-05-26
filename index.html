@@ -29,14 +29,6 @@
     <h3>Resultados encontrados:</h3>
     <ul id="listaResultados"></ul>
 
-    <hr>
-
-    <div class="resultado-box">
-        <h3>Dados Preenchidos (Clique em um resultado acima):</h3>
-        <p>CEP: <strong id="resCep">-</strong></p>
-        <p>Rua: <strong id="resRua">-</strong></p>
-        <p>Bairro: <strong id="resBairro">-</strong></p>
-    </div>
 
     <script>
         // Função que impede números e força letras maiúsculas no campo UF
@@ -63,7 +55,7 @@
             lista.innerHTML = "<li class='loading'>Buscando endereços na base do ViaCEP...</li>";
 
             try {
-                const url = `https://viacep.com.br{uf}/${encodeURIComponent(cidade)}/${encodeURIComponent(logradouro)}/json/`;
+                const url = `https://viacep.com.br/ws/${encodeURIComponent(uf)}/${encodeURIComponent(cidade)}/${encodeURIComponent(logradouro)}/json/`;
 
                 
                 const response = await fetch(url);
