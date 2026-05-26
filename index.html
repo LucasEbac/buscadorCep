@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador de Endereços</title>
-    
+    <link rel="stylesheet" href="style.css">
 <body>
 
     <h2>Buscador de Endereço</h2>
@@ -64,6 +64,7 @@
 
             try {
                 const url = `https://viacep.com.br{uf}/${encodeURIComponent(cidade)}/${encodeURIComponent(logradouro)}/json/`;
+
                 
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Erro na rede.");
